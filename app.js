@@ -90,7 +90,7 @@ function render() {
   $('train-value').textContent = fmt(selected.trainRmse);
   $('test-value').textContent = fmt(selected.testRmse);
   $('best-value').textContent = `Degree ${best.degree}`;
-  $('readout').textContent = `At degree ${state.degree}, the model misses the training observations by ${fmt(selected.trainRmse)} rolls per hour on average (RMSE), and the independent test observations by ${fmt(selected.testRmse)}. The lowest test error in this run is at degree ${best.degree}.`;
+  $('readout').textContent = `At degree ${state.degree}, training RMSE is ${fmt(selected.trainRmse)} rolls per hour, compared with ${fmt(selected.testRmse)} on independent test observations. The lowest test error in this run is at degree ${best.degree}.`;
   renderDemand(); renderErrors();
   const url = new URL(location.href);
   for (const [key,value] of Object.entries(state)) url.searchParams.set(key, value);
