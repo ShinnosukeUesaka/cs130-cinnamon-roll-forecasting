@@ -95,7 +95,7 @@ function rmse(model, data) {
   return Math.sqrt(squaredError / data.length);
 }
 
-export function runSimulation({ n = 40, noise = 7, seed = 130 } = {}) {
+export function runSimulation({ n = 30, noise = 9, seed = 123 } = {}) {
   const { training, test } = makeData(n, noise, seed);
   const results = [];
   for (let degree = 1; degree <= 15; degree++) {

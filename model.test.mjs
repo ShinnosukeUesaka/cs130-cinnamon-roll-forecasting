@@ -12,10 +12,10 @@ test('nested least-squares fits never increase training RMSE', () => {
   }
 });
 
-test('default run is reproducible and demonstrates overfitting', () => {
-  const a=runSimulation({n:40,noise:7,seed:130});
-  const b=runSimulation({n:40,noise:7,seed:130});
+test('default run is reproducible and clearly demonstrates overfitting', () => {
+  const a=runSimulation();
+  const b=runSimulation();
   assert.equal(a.results[3].testRmse,b.results[3].testRmse);
   assert.ok(a.results[14].trainRmse < a.results[3].trainRmse);
-  assert.ok(a.results[14].testRmse > a.results[3].testRmse);
+  assert.ok(a.results[14].testRmse > 1.25*a.results[3].testRmse);
 });

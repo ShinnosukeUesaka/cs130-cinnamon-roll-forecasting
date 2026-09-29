@@ -3,10 +3,10 @@ import { runSimulation, trueDemand, predict } from './model.js';
 const $ = id => document.getElementById(id);
 const params = new URLSearchParams(location.search);
 let state = {
-  n: clamp(Number(params.get('n')) || 40, 20, 160),
-  noise: clamp(Number(params.get('noise')) || 7, 1, 14),
-  degree: clamp(Number(params.get('degree')) || 5, 1, 15),
-  seed: clamp(Number(params.get('seed')) || 130, 1, 999999)
+  n: clamp(Number(params.get('n')) || 30, 20, 160),
+  noise: clamp(Number(params.get('noise')) || 9, 1, 14),
+  degree: clamp(Number(params.get('degree')) || 4, 1, 15),
+  seed: clamp(Number(params.get('seed')) || 123, 1, 999999)
 };
 let simulation;
 
@@ -91,6 +91,9 @@ function render() {
   $('test-value').textContent = fmt(selected.testRmse);
   $('best-value').textContent = `Degree ${best.degree}`;
   $('readout').textContent = `At degree ${state.degree}, training RMSE is ${fmt(selected.trainRmse)} rolls per hour, compared with ${fmt(selected.testRmse)} on independent test observations. The lowest test error in this run is at degree ${best.degree}.`;
+  const mostFlexible = simulation.results[14];
+  const rise = Math.round(100 * (mostFlexible.testRmse / best.testRmse - 1));
+  $('comparison').textContent = `From degree ${best.degree} to 15, training RMSE falls from ${fmt(best.trainRmse)} to ${fmt(mostFlexible.trainRmse)}, while test RMSE rises from ${fmt(best.testRmse)} to ${fmt(mostFlexible.testRmse)} (${rise}% higher).`;
   renderDemand(); renderErrors();
   const url = new URL(location.href);
   for (const [key,value] of Object.entries(state)) url.searchParams.set(key, value);
@@ -105,6 +108,7 @@ for (const [id,key] of [['sample','n'],['noise','noise'],['degree','degree']]) {
   });
 }
 $('resimulate').addEventListener('click', () => { state.seed += 1; recalculate(); });
+$('show-example').addEventListener('click', () => { state = { n: 30, noise: 9, degree: 4, seed: 123 }; recalculate(); });
 $('copy-summary').addEventListener('click', async () => {
   const selected = simulation.results[state.degree - 1];
   const best = simulation.results.reduce((a,b) => b.testRmse < a.testRmse ? b : a);
